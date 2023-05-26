@@ -78,7 +78,7 @@ Call the function `openBook()`:
 ##### opening book from assets -
 
 ```java
-folioReader.openBook("file:///android_asset/TheSilverChair.epub");
+folioReader.openBook("file:///android_asset/the_silver_chair.epub");
 ```
 ##### opening book from raw -
 

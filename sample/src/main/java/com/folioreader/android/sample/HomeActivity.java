@@ -92,17 +92,9 @@ public class HomeActivity extends AppCompatActivity
 
                 folioReader.setReadLocator(readLocator);
                 folioReader.setConfig(config, true)
-                        .openBook("file:///android_asset/john.epub");
+                        .openBook("file:///android_asset/the_silver_chair.epub");
             }
         });
-
-        Config config = AppUtil.getSavedConfig(getApplicationContext());
-        if (config == null)
-            config = new Config();
-        config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
-
-        folioReader.setConfig(config, true)
-                .openBook(R.raw.accessible_epub_3);
     }
 
     private ReadLocator getLastReadLocator() {
