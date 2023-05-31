@@ -65,6 +65,16 @@ dependencies {
 
 Enable Multidex support as explained in this [Android Doc](https://developer.android.com/studio/build/multidex)
 
+### duplicate library issue
+
+Add following line in the gradle.properties file if you face `checkDebugDuplicateClasses` or `Manifest merger` issue
+
+```java
+android.useAndroidX=true
+android.enableJetifier=true
+```
+
+
 ### Usage
 
 Get singleton object of `FolioReader`:
