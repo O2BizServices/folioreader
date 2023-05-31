@@ -5,6 +5,13 @@
     tools:context="com.folioreader.ui.activity.FolioActivity">
 
     <item
+        android:id="@+id/itemChapters"
+        android:icon="@drawable/ic_chapters"
+        android:title="@string/menu_item_config"
+        app:showAsAction="ifRoom"
+        tools:showAsAction="always" />
+
+    <item
         android:id="@+id/itemBookmark"
         android:icon="@drawable/ic_baseline_bookmark_border_24"
         android:title="@string/menu_item_config"

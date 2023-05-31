@@ -65,6 +65,16 @@ dependencies {
 
 Enable Multidex support as explained in this [Android Doc](https://developer.android.com/studio/build/multidex)
 
+### Build library issue
+
+Add following lines in the gradle.properties file if you face `checkDebugDuplicateClasses` or `Manifest merger` issue during build
+
+```java
+android.useAndroidX=true
+android.enableJetifier=true
+```
+
+
 ### Usage
 
 Get singleton object of `FolioReader`:
@@ -78,7 +88,7 @@ Call the function `openBook()`:
 ##### opening book from assets -
 
 ```java
-folioReader.openBook("file:///android_asset/TheSilverChair.epub");
+folioReader.openBook("file:///android_asset/the_silver_chair.epub");
 ```
 ##### opening book from raw -
 
@@ -86,6 +96,23 @@ folioReader.openBook("file:///android_asset/TheSilverChair.epub");
 folioReader.openBook(R.raw.accessible_epub_3);
 ```
 
+##### for configuring -
+
+Create an object `Config config = new Config()`;
+
+```java
+config.setShowBookMarkBtn(false);
+config.setShowSizeChangerBtn(false);
+config.setShowSearchBtn(false);
+config.setShowBackBtn(true);
+```
+
+Then pass the object `config` to `folioReader.setConfig(config, true)` function:
+
+```java
+folioReader.setConfig(config, true)
+        .openBook("file:///android_asset/the_silver_chair.epub");
+```
 
 ## WIKI
 
