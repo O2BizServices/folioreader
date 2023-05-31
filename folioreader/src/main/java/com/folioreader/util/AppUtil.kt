@@ -101,6 +101,11 @@ class AppUtil {
                 obj.put(Config.CONFIG_DIRECTION, config.direction.toString())
                 obj.put(Config.CONFIG_REMAINING_INDICATOR, config.isShowRemainingIndicator)
                 obj.put(Config.CONFIG_TEXT_SELECTION, config.isShowTextSelection)
+                obj.put(Config.CONFIG_SHOW_SEARCH_BTN, config.isShowSearchBtn)
+                obj.put(Config.CONFIG_SHOW_BOOKMARK_BTN, config.isShowBookMarkBtn)
+                obj.put(Config.CONFIG_SHOW_SIZE_CHANGE_BTN, config.isShowSizeChangerBtn)
+                obj.put(Config.CONFIG_SHOW_BACK_BTN, config.isShowBackBtn)
+
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()

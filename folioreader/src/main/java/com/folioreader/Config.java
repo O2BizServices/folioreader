@@ -31,6 +31,12 @@ public class Config implements Parcelable {
     public static final String CONFIG_DIRECTION = "direction";
     public static final String CONFIG_REMAINING_INDICATOR = "show_remaining_indicator";
     public static final String CONFIG_TEXT_SELECTION = "text_selection";
+
+    public static final String CONFIG_SHOW_SEARCH_BTN= "search_btn";
+    public static final String CONFIG_SHOW_BOOKMARK_BTN= "bookmark_btn";
+    public static final String CONFIG_SHOW_SIZE_CHANGE_BTN= "size_change_btn";
+    public static final String CONFIG_SHOW_BACK_BTN= "back_btn";
+
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
     private static final Direction DEFAULT_DIRECTION = Direction.VERTICAL;
     private static final int DEFAULT_THEME_COLOR_INT =
@@ -39,6 +45,10 @@ public class Config implements Parcelable {
     private String font = "Roboto";
     private int fontSize = 2;
     private boolean nightMode;
+    private boolean showSearchBtn = true;
+    private boolean showBookMarkBtn = true;
+    private boolean showSizeChangerBtn = true;
+    private boolean showBackBtn = true;
     @ColorInt
     private int themeColor = DEFAULT_THEME_COLOR_INT;
     private int nightThemeColor = themeColor;
@@ -53,6 +63,38 @@ public class Config implements Parcelable {
      */
     public enum AllowedDirection {
         ONLY_VERTICAL, ONLY_HORIZONTAL, VERTICAL_AND_HORIZONTAL
+    }
+
+    public boolean isShowSearchBtn() {
+        return showSearchBtn;
+    }
+
+    public void setShowSearchBtn(boolean showSearchBtn) {
+        this.showSearchBtn = showSearchBtn;
+    }
+
+    public boolean isShowBookMarkBtn() {
+        return showBookMarkBtn;
+    }
+
+    public void setShowBookMarkBtn(boolean showBookMarkBtn) {
+        this.showBookMarkBtn = showBookMarkBtn;
+    }
+
+    public boolean isShowSizeChangerBtn() {
+        return showSizeChangerBtn;
+    }
+
+    public void setShowSizeChangerBtn(boolean showSizeChangerBtn) {
+        this.showSizeChangerBtn = showSizeChangerBtn;
+    }
+
+    public boolean isShowBackBtn() {
+        return showBackBtn;
+    }
+
+    public void setShowBackBtn(boolean showBackBtn) {
+        this.showBackBtn = showBackBtn;
     }
 
     /**
@@ -92,6 +134,10 @@ public class Config implements Parcelable {
         bundle.putString(CONFIG_ALLOWED_DIRECTION, allowedDirection.toString());
         bundle.putString(CONFIG_DIRECTION, direction.toString());
         bundle.putBoolean(CONFIG_REMAINING_INDICATOR, showRemainingIndicator);
+        bundle.putBoolean(CONFIG_SHOW_SEARCH_BTN, showSearchBtn);
+        bundle.putBoolean(CONFIG_SHOW_BOOKMARK_BTN, showBookMarkBtn);
+        bundle.putBoolean(CONFIG_SHOW_SIZE_CHANGE_BTN, showSizeChangerBtn);
+        bundle.putBoolean(CONFIG_SHOW_BACK_BTN, showBackBtn);
         dest.writeBundle(bundle);
     }
 
@@ -119,6 +165,10 @@ public class Config implements Parcelable {
                         getBundleItem(bundle, CONFIG_DIRECTION, DEFAULT_DIRECTION.toString())
                 );
                 showRemainingIndicator = getBundleItem(bundle, CONFIG_REMAINING_INDICATOR, showRemainingIndicator);
+                showSearchBtn = getBundleItem(bundle, CONFIG_SHOW_SEARCH_BTN, showSearchBtn);
+                showBookMarkBtn = getBundleItem(bundle, CONFIG_SHOW_BOOKMARK_BTN, showBookMarkBtn);
+                showSizeChangerBtn = getBundleItem(bundle, CONFIG_SHOW_SIZE_CHANGE_BTN, showSizeChangerBtn);
+                showBackBtn = getBundleItem(bundle, CONFIG_SHOW_BACK_BTN, showBackBtn);
             }
         } catch (Exception e) {
             Log.i("Parse Error", "Bundle does not exist, using default configuration.");
@@ -171,6 +221,10 @@ public class Config implements Parcelable {
                 getJsonItem(obj, CONFIG_DIRECTION, DEFAULT_DIRECTION.toString())
         );
         showRemainingIndicator = getJsonItem(obj, CONFIG_REMAINING_INDICATOR, false);
+        showSearchBtn = getJsonItem(obj, CONFIG_SHOW_SEARCH_BTN, true);
+        showBookMarkBtn = getJsonItem(obj, CONFIG_SHOW_BOOKMARK_BTN, true);
+        showSizeChangerBtn = getJsonItem(obj, CONFIG_SHOW_SIZE_CHANGE_BTN, true);
+        showBackBtn = getJsonItem(obj, CONFIG_SHOW_BACK_BTN, true);
     }
 
     @SuppressWarnings("unchecked")

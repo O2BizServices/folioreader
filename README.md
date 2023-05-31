@@ -86,6 +86,23 @@ folioReader.openBook("file:///android_asset/the_silver_chair.epub");
 folioReader.openBook(R.raw.accessible_epub_3);
 ```
 
+##### for configuring -
+
+Create an object `Config config = new Config()`;
+
+```java
+config.setShowBookMarkBtn(false);
+config.setShowSizeChangerBtn(false);
+config.setShowSearchBtn(false);
+config.setShowBackBtn(true);
+```
+
+Then pass the object `config` to `folioReader.setConfig(config, true)` function:
+
+```java
+folioReader.setConfig(config, true)
+        .openBook("file:///android_asset/the_silver_chair.epub");
+```
 
 ## WIKI
 

@@ -334,9 +334,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         val config = AppUtil.getSavedConfig(applicationContext)!!
 
-        val drawable = ContextCompat.getDrawable(this, R.drawable.ic_drawer)
-        UiUtil.setColorIntToDrawable(config.currentThemeColor, drawable!!)
-        toolbar!!.navigationIcon = drawable
+        if (config.isShowBackBtn) {
+            val drawable = ContextCompat.getDrawable(this, R.drawable.ic_back)
+            UiUtil.setColorIntToDrawable(config.currentThemeColor, drawable!!)
+            toolbar?.navigationIcon = drawable
+            supportActionBar?.setDisplayHomeAsUpEnabled(config.isShowBackBtn)
+            toolbar?.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
 
         if (config.isNightMode) {
             setNightMode()
@@ -373,9 +379,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val config = AppUtil.getSavedConfig(applicationContext)!!
 
         // Update drawer color
-        val newNavIcon = toolbar!!.navigationIcon
-        UiUtil.setColorIntToDrawable(config.themeColor, newNavIcon)
-        toolbar!!.navigationIcon = newNavIcon
+        if (config.isShowBackBtn) {
+            val newNavIcon = toolbar!!.navigationIcon
+            UiUtil.setColorIntToDrawable(config.themeColor, newNavIcon)
+            toolbar!!.navigationIcon = newNavIcon
+        }
 
         // Update toolbar colors
         createdMenu?.let { m ->
@@ -398,9 +406,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val config = AppUtil.getSavedConfig(applicationContext)!!
 
         // Update drawer color
-        val newNavIcon = toolbar!!.navigationIcon
-        UiUtil.setColorIntToDrawable(config.nightThemeColor, newNavIcon)
-        toolbar!!.navigationIcon = newNavIcon
+        if (config.isShowBackBtn) {
+            val newNavIcon = toolbar!!.navigationIcon
+            UiUtil.setColorIntToDrawable(config.nightThemeColor, newNavIcon)
+            toolbar!!.navigationIcon = newNavIcon
+        }
 
         // Update toolbar colors
         createdMenu?.let { m ->
@@ -424,18 +434,29 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
             val config = AppUtil.getSavedConfig(applicationContext)!!
             UiUtil.setColorIntToDrawable(
-                    config.currentThemeColor,
-                    menu.findItem(R.id.itemBookmark).icon
+                config.currentThemeColor,
+                menu.findItem(R.id.itemBookmark).icon
             )
             UiUtil.setColorIntToDrawable(
-                    config.currentThemeColor,
-                    menu.findItem(R.id.itemSearch).icon
+                config.currentThemeColor,
+                menu.findItem(R.id.itemSearch).icon
             )
             UiUtil.setColorIntToDrawable(
-                    config.currentThemeColor,
-                    menu.findItem(R.id.itemConfig).icon
+                config.currentThemeColor,
+                menu.findItem(R.id.itemConfig).icon
             )
             UiUtil.setColorIntToDrawable(config.currentThemeColor, menu.findItem(R.id.itemTts).icon)
+
+            Log.e("112233","show back button 12: ${config.isShowBackBtn}")
+            Log.e("112233","show bookmark 12:  ${config.isShowBookMarkBtn}")
+            menu.findItem(R.id.itemBookmark).isVisible = config.isShowBookMarkBtn
+            menu.findItem(R.id.itemSearch).isVisible = config.isShowSearchBtn
+            menu.findItem(R.id.itemConfig).isVisible = config.isShowSizeChangerBtn
+
+            menu.findItem(R.id.itemChapters).setOnMenuItemClickListener {
+                startContentHighlightActivity()
+                true
+            }
 
             if (!config.isShowTts)
                 menu.findItem(R.id.itemTts).isVisible = false
@@ -450,11 +471,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         //Log.d(LOG_TAG, "-> onOptionsItemSelected -> " + item.getItemId());
 
         when (item.itemId) {
-            android.R.id.home -> {
-                Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
-                startContentHighlightActivity()
-                return true
-            }
+//            android.R.id.home -> {
+//                Log.v(LOG_TAG, "-> onOptionsItemSelected -> drawer")
+//                startContentHighlightActivity()
+//                return true
+//            }
             R.id.itemBookmark -> {
                 val readLocator = currentFragment!!.getLastReadLocator()
                 Log.v(LOG_TAG, "-> onOptionsItemSelected 'if' -> bookmark")
@@ -469,23 +490,35 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 dialog.setContentView(R.layout.dialog_bookmark)
                 dialog.show()
                 dialog.setCanceledOnTouchOutside(true)
-                dialog.setOnCancelListener{
-                    Toast.makeText(this,
+                dialog.setOnCancelListener {
+                    Toast.makeText(
+                        this,
                         "please enter a Bookmark name and then press Save",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 dialog.findViewById<View>(R.id.btn_save_bookmark).setOnClickListener {
-                    val name = (dialog.findViewById<View>(R.id.bookmark_name) as EditText).text.toString()
+                    val name =
+                        (dialog.findViewById<View>(R.id.bookmark_name) as EditText).text.toString()
                     if (!TextUtils.isEmpty(name)) {
                         val simpleDateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-                        val id =  BookmarkTable(this).insertBookmark(mBookId, simpleDateFormat.format(Date()), name, bookmarkReadLocator!!.toJson().toString())
-                        Toast.makeText(this,
+                        val id = BookmarkTable(this).insertBookmark(
+                            mBookId,
+                            simpleDateFormat.format(Date()),
+                            name,
+                            bookmarkReadLocator!!.toJson().toString()
+                        )
+                        Toast.makeText(
+                            this,
                             getString(R.string.book_mark_success),
-                            Toast.LENGTH_SHORT).show()
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this,
+                        Toast.makeText(
+                            this,
                             "please Enter a Bookmark name and then press Save",
-                            Toast.LENGTH_SHORT).show()
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     dialog.dismiss()
                 }
@@ -493,6 +526,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
                 return true
             }
+
             R.id.itemSearch -> {
                 Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
                 if (searchUri == null)
@@ -506,17 +540,20 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 return true
 
             }
+
             R.id.itemConfig -> {
                 Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
                 showConfigBottomSheetDialogFragment()
                 return true
 
             }
+
             R.id.itemTts -> {
                 Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
                 showMediaController()
                 return true
             }
+
             else -> return super.onOptionsItemSelected(item)
         }
 
@@ -541,7 +578,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         intent.putExtra(BOOK_TITLE, bookFileName)
 
         startActivityForResult(intent, RequestCode.CONTENT_HIGHLIGHT.value)
-        overridePendingTransition(R.anim.slide_in_left, R.anim.disappear)
+        overridePendingTransition(R.anim.slide_up, R.anim.disappear)
     }
 
     private fun showConfigBottomSheetDialogFragment() {
@@ -590,10 +627,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 val epubParser = EpubParser()
                 epubParser.parse(path!!, "")
             }
+
             Publication.EXTENSION.CBZ -> {
                 val cbzParser = CbzParser()
                 cbzParser.parse(path!!, "")
             }
+
             else -> {
                 null
             }
@@ -935,6 +974,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     goToChapter(data.getStringExtra(SELECTED_CHAPTER_POSITION)!!)
 
                 }
+
                 HIGHLIGHT_SELECTED -> {
                     val highlightImpl = data.getParcelableExtra<HighlightImpl>(HIGHLIGHT_ITEM)
                     currentChapterIndex = highlightImpl!!.pageNumber
@@ -942,8 +982,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     val folioPageFragment = currentFragment ?: return
                     folioPageFragment.scrollToHighlightId(highlightImpl.rangy)
                 }
+
                 BOOKMARK_SELECTED -> {
-                    val bookmark = data.getSerializableExtra(BOOKMARK_ITEM) as HashMap<String, String>
+                    val bookmark =
+                        data.getSerializableExtra(BOOKMARK_ITEM) as HashMap<String, String>
                     bookmarkReadLocator = ReadLocator.fromJson(bookmark["readlocator"].toString())
                     currentChapterIndex = getChapterIndex(bookmarkReadLocator)
                     mFolioPageViewPager!!.currentItem = currentChapterIndex
@@ -996,7 +1038,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
 
             override fun onPageSelected(position: Int) {
-                Log.v(LOG_TAG, "-> onPageSelected value -> DirectionalViewpager -> position = $position")
+                Log.v(
+                    LOG_TAG,
+                    "-> onPageSelected value -> DirectionalViewpager -> position = $position"
+                )
 
                 EventBus.getDefault().post(
                     MediaOverlayPlayPauseEvent(
@@ -1142,6 +1187,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (config == null)
             config = Config()
 
+        Log.e("112233","intentConfig is null ${intentConfig == null}")
+        Log.e("112233","saving config from folio activity: back btn: ${intentConfig?.isShowBackBtn}")
         AppUtil.saveConfig(this, config)
         direction = config.direction
     }

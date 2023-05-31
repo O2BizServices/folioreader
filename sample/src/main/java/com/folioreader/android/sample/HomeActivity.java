@@ -85,6 +85,12 @@ public class HomeActivity extends AppCompatActivity
                 Config config = AppUtil.getSavedConfig(getApplicationContext());
                 if (config == null)
                     config = new Config();
+
+                config.setShowBookMarkBtn(true);
+                config.setShowSizeChangerBtn(true);
+                config.setShowSearchBtn(true);
+                config.setShowBackBtn(true);
+
                 config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
                 config.setNightThemeColorInt(Color.parseColor("#FFFFFF"));
                 config.setShowRemainingIndicator(true);
